@@ -1,0 +1,257 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+ <meta charset="utf-8">
+ <title>JSON.parse()方法-歪脖网</title>
+ <meta name="keywords" content="JSON, JSON 教程, JSON.parse(), JSON.parse()方法" />
+ <meta name="description" content="JSON.parse() 方法，用于把JSON字符串转换为原生的 JavaScript 值或对象" />
+ <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+ <link href="http://localhost/waibo/css/bootstrap.min.css" rel="stylesheet" />
+ <link href="http://localhost/waibo/css/bootstrap-responsive.min.css" rel="stylesheet" />
+ <link href="http://localhost/waibo/css/style.css" rel="stylesheet" />
+
+ <script src="http://localhost/waibo/js/jquery.js"></script>
+ <script src="http://localhost/waibo/js/script.js"></script>
+</head>
+
+<body>
+ <div class="topbar">
+ <div class="eyebrow hidden-phone">
+ <div class="container">
+ <ul class="pull-left">
+   <li><a href="http://www.waibo.wang/" target="_blank">歪脖网</a>欢迎您！</li>
+ </ul>
+ <ul class="pull-right">
+  <li><a href="http://www.waibo.wang/user/">登录</a></li>
+  <li class="b">|</li>
+  <li><a href="http://www.waibo.wang/user/register.asp" target="_blank">注册</a></li>
+ </div>
+ </div>
+
+<div class="topnav">
+<div class="container">
+  <div class="row-fluid mtz">
+  <div class="span3 topnav-logo">
+    <a href="http://www.waibo.wang/"><p class="logo-cn">歪脖网</p><p class="logo-en hidden-phone">waibo.wang</p></a>
+  </div>
+  <div class="span6 nav">
+   <ul>
+     <li ><a href="http://www.waibo.wang/">首页</a></li>
+     <li class="active"><a href="http://localhost/waibo/">教程</a></li>
+     <li ><a href="http://www.waibo.wang/wiki/">专栏</a></li>
+     <li ><a href="http://www.waibo.wang/demo/">素材</a></li>
+   </ul>
+  </div>
+  <div class="span3 topnav-form">
+  </div>
+ </div>
+ </div>
+ </div>
+ </div>
+
+
+ <div class="container">
+ <div class="row-fluid">
+ <aside class="span3">
+ <map id="oAll" name="oAll">
+ <area title="全部展开" shape="rect" coords="0,0,22,20"  href="javascript:tree.openAll();" onfocus="blur(this);">
+ <area title="全部收起" shape="rect" coords="22,0,44,20" href="javascript:tree.closeAll();" onfocus="blur(this);">
+ </map>
+ <header><span>目录</span><img src="http://localhost/waibo/img/map.png" usemap="#oAll"/></header>
+ <script src="http://localhost/waibo/js/dtree.js"></script>
+ <script src="http://localhost/waibo/bible/json/js/tree.js"></script>
+ <script>
+    createTree("10501");
+ </script>
+ </aside>
+
+ <main class="span9">
+ <header><div class="name"><strong>JSON 教程</strong></div><div class="section">1.5.1 JSON.parse()</div></header>
+ <div><label id="treeview"><input id="show" type="checkbox" checked /> 文档结构视图</label><span class="hit">阅读（ <span id="hit"></span> ）</div>
+ <article>
+<h1 class="hide-text">JSON 教程</h1>
+<h2 class="hide-text">JSON简介</h2>
+<h2 class="hide-text">JSON语法</h2>
+<h2 class="hide-text">JSON对象</h2>
+<h2 class="hide-text">JSON数组</h2>
+<h2>JSON和JS对象互转</h2>
+<p>JSON的本质是一个字符串，它之所以受欢迎，是因为可以把JSON字符串解析为有用的JavaScript对象。</p>
+<p>ECMAScript5中，对解析JSON的行为进行了规范，并定义了一个全局对象JSON，该对象有两个方法：JSON.parse() 和 JSON.stringify()。</p>
+<h3>JSON.parse()</h3>
+<p>JSON.parse() 方法，用于把JSON字符串转换为原生的 JavaScript 值或对象。如：</p>
+<pre class="prettyprint linenums">
+<code>JSON.parse('1')       // 1
+JSON.parse('{}')      // {}
+JSON.parse('true')    // true
+JSON.parse('"foo"')   // "foo"
+JSON.parse('[1, 5, "false"]')   // [1, 5, "false"]
+JSON.parse('null')    // null
+var o = JSON.parse('{"name": "张三"}');
+o.name   // 张三</code></pre>
+<p>如果传递给JSON.parse()方法的字符串不是有效的JSON格式，JSON.parse()方法将报错。如：</p>
+<pre class="prettyprint linenums">
+<code>JSON.parse("'String'")
+//Uncaught SyntaxError: Unexpected token u in JSON at position 0(…)
+
+JSON.parse("undefined")
+//Uncaught SyntaxError: Unexpected token u in JSON at position 0(…)</code></pre>
+<p>除了直接进行字符串转换之外，JSON.parse()方法也可以接收一个函数参数，该函数被称为还原函数。如果提供还原函数，则对象的每个成员都会调用这个函数。</p>
+<p>还原函数接收两个参数，一个键和一个值，并返回一个值。如果还原函数返回undefined，则表示要从结果中删除相应的键；如果返回其他值，则将该值插入到结果中。如：</p>
+<pre class="prettyprint linenums">
+<code>var o = JSON.parse('{"a":1,"b":2}', function(key, value) {
+  if (key === ''){
+    return value;
+  }
+  if (key === 'a') {
+    return value + 10;
+  }
+});
+o.a // 11
+o.b // undefined</code></pre>
+<p>JSON 不能存储 Date 对象。如果你需要存储 Date 对象，需要将其转换为字符串，之后再将字符串转换为 Date 对象。在将日期字符串转换为Date对象时，经常要用到还原函数。如：</p>
+<pre class="prettyprint linenums">
+<code>var book = {
+  "title": "javascript",
+  "date": new Date(2018,1,21)
+}
+var jsonStr = JSON.stringify(book);
+console.log(jsonStr)
+//'{"title":"javascript","date":"2018-02-20T16:00:00.000Z"}'
+
+var bookCopy = JSON.parse(jsonStr,function(key,value){
+  if(key == 'date'){
+    return new Date(value);
+  }
+  return value;
+})
+console.log(bookCopy.date.getFullYear());  //2018</code></pre>
+<section>
+<p class="note">说明：JSON.parse() 和 eval()</p>
+<p>实际上，eval() 函数的功能类似于 JSON.parse()方法，也可以将json字符串转换为json对象。如：</p>
+<pre class="prettyprint linenums">
+<code>eval('(' + '{"a":1}'+')').a;    //1
+JSON.parse('{"a":1}').a;        //1</code></pre>
+<p>但是，eval() 函数可以执行不符合 JSON 格式的代码。如：</p>
+<pre class="prettyprint linenums">
+<code>eval('(' + '{"a":alert(1)}'+')').a;    //弹出1
+JSON.parse('{"a":alert(1)}').a;        //报错</code></pre>
+<p>在浏览器中运行上述代码，eval() 函数就会弹出 alert 框，而 JSON.parse()方法将会报错。由于 eval() 函数会为恶意代码提供可乘之机，因此应当尽量少使用 eval() 函数，而是使用更安全的 JSON.parse()方法。</p>
+</section>
+<div id="modalReward" class="modal hide fade modal-reward" tabindex="-1">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal">&times;</button>
+<h6>打赏</h6>
+</div>
+<div class="modal-body">
+<div class="tabbable reward-weipay">
+<ul class="nav nav-tabs">
+<li class="active"><a data-toggle="tab" href="#weipay1">￥1</a></li>
+<li><a data-toggle="tab" href="#weipay2">￥2</a></li>
+<li><a data-toggle="tab" href="#weipay5">￥5</a></li>
+<li><a data-toggle="tab" href="#weipay10">￥10</a></li>
+<li><a data-toggle="tab" href="#weipay20">￥20</a></li>
+<li><a data-toggle="tab" href="#weipayrand">其他金额</a></li>
+</ul>
+<div class="tab-content">
+<div class="tab-pane active" id="weipay1">
+<img src="http://localhost/waibo/img/weipay1.png" alt="￥1"><span>￥1</span>
+</div>
+<div class="tab-pane" id="weipay2">
+<img src="http://localhost/waibo/img/weipay2.png" alt="￥2"><span>￥2</span>
+</div>
+<div class="tab-pane" id="weipay5">
+<img src="http://localhost/waibo/img/weipay5.png" alt="￥5"><span>￥5</span>
+</div>
+<div class="tab-pane" id="weipay10">
+<img src="http://localhost/waibo/img/weipay10.png" alt="￥10"><span>￥10</span>
+</div>
+<div class="tab-pane" id="weipay20">
+<img src="http://localhost/waibo/img/weipay20.png" alt="￥20"><span>￥20</span>
+</div>
+<div class="tab-pane" id="weipayrand">
+<img src="http://localhost/waibo/img/weipayrand.png" alt="￥随意"><span>￥随意</span>
+</div>
+</div>
+</div>
+<div class="tabbable reward-alipay hide">
+<ul class="nav nav-tabs">
+<li class="active"><a data-toggle="tab" href="#alipay1">￥1</a></li>
+<li><a data-toggle="tab" href="#alipay2">￥2</a></li>
+<li><a data-toggle="tab" href="#alipay5">￥5</a></li>
+<li><a data-toggle="tab" href="#alipay10">￥10</a></li>
+<li><a data-toggle="tab" href="#alipay20">￥20</a></li>
+<li><a data-toggle="tab" href="#alipayrand">其他金额</a></li>
+</ul>
+<div class="tab-content">
+<div class="tab-pane active" id="alipay1">
+<img src="http://localhost/waibo/img/alipay1.png" alt="￥1"><span>￥1</span>
+</div>
+<div class="tab-pane" id="alipay2">
+<img src="http://localhost/waibo/img/alipay2.png" alt="￥2"><span>￥2</span>
+</div>
+<div class="tab-pane" id="alipay5">
+<img src="http://localhost/waibo/img/alipay5.png" alt="￥5"><span>￥5</span>
+</div>
+<div class="tab-pane" id="alipay10">
+<img src="http://localhost/waibo/img/alipay10.png" alt="￥10"><span>￥10</span>
+</div>
+<div class="tab-pane" id="alipay20">
+<img src="http://localhost/waibo/img/alipay20.png" alt="￥20"><span>￥20</span>
+</div>
+<div class="tab-pane" id="alipayrand">
+<img src="http://localhost/waibo/img/alipayrand.png" alt="￥随意"><span>￥随意</span>
+</div>
+</div>
+</div>
+<div class="reward-method">
+<label><input type="radio" name="method" value="weipay" checked><img src="http://localhost/waibo/img/weipay.png" alt="微信支付"></label>
+<label><input type="radio" name="method" value="alipay"><img src="http://localhost/waibo/img/alipay.png" alt="支付宝"></label>
+</div>
+</div>
+</div>
+<div class="reward">
+<p>如果本教程对您帮助很大，请随意打赏。您的支持，将鼓励我写出更好的教程！</p>
+<a data-toggle="modal" href="#modalReward">赏</a>
+</div>
+ <div class="page">
+   <a id="prev" href="http://localhost/waibo/bible/json/html/1/1.4.3.html" title="&#8592; 键到上一节">« 上一节</a>&#8592; 键盘方向键翻页 &#8594;<a id="next" href="http://localhost/waibo/bible/json/html/1/1.5.2.html" title="&#8594; 键到下一节">下一节 »</a>
+ </div>
+ </article>
+ </main>
+ </div>
+ </div>
+ <div class="floatPanel">
+	 <div class="ctrolPanel">
+		 <a href="javascript:;" class="arrow top" onClick="goTop()"><span>返回顶部</span></a>
+    <a href="#" class="phone"  data-target="#phone"><span>手机访问</span></a>
+    <a href="#" class="wechat" data-target="#wechat"><span>关注微信</span></a>
+    <a href="javascript:;" class="arrow bottom" onClick="goBottom()"><span>返回底部</span></a>
+  </div>
+	<div id="phone" class="popPanel">
+		<div class="popPanel-inner">
+			<img src="http://localhost/waibo/img/site.png" /><p class="slogan">扫码访问歪脖网</p><p>随时随地，想看就看</p>
+		</div>
+	</div>
+	<div id="wechat" class="popPanel">
+		<div class="popPanel-inner">
+			<img src="http://localhost/waibo/img/weixin.png" /><p class="slogan">关注歪脖网微信</p><p>分享 web 知识、交流 web 经验</p>
+		</div>
+	</div>
+</div>
+ <footer>
+   <p>Copyright&copy;2017&nbsp;&nbsp;www.waibo.wang All Rights Reserved</p>
+   <p>陕ICP备17020676号-1&nbsp;&nbsp;&nbsp;&nbsp;客服QQ：376601179&nbsp;&nbsp;&nbsp;&nbsp;邮箱：376601179#qq.com
+ </footer>
+ <script src="http://localhost/waibo/js/prettify.js"></script>
+ <script src="http://localhost/waibo/js/bootstrap.min.js"></script>
+ <script src="http://localhost/waibo/js/ckeditor_4.7.1/ckeditor.js"></script>
+ <script>
+ $(function() {
+    prettyPrint();
+    bible();
+    load();
+    rewardMethod();
+ });
+ </script>
+</body>
+</html>

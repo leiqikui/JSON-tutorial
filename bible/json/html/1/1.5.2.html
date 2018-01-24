@@ -1,0 +1,364 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+ <meta charset="utf-8">
+ <title>JSON.stringify()方法和 toJSON()方法-歪脖网</title>
+ <meta name="keywords" content="JSON, JSON 教程, JSON.stringify(), JSON.stringify()方法, toJSON(), toJSON()方法" />
+ <meta name="description" content="JSON.stringify()方法用于把JavaScript值（对象或者数组）序列化为JSON字符串，并返回序列化后的JSON字符串" />
+ <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+ <link href="http://localhost/waibo/css/bootstrap.min.css" rel="stylesheet" />
+ <link href="http://localhost/waibo/css/bootstrap-responsive.min.css" rel="stylesheet" />
+ <link href="http://localhost/waibo/css/style.css" rel="stylesheet" />
+
+ <script src="http://localhost/waibo/js/jquery.js"></script>
+ <script src="http://localhost/waibo/js/script.js"></script>
+</head>
+
+<body>
+ <div class="topbar">
+ <div class="eyebrow hidden-phone">
+ <div class="container">
+ <ul class="pull-left">
+   <li><a href="http://www.waibo.wang/" target="_blank">歪脖网</a>欢迎您！</li>
+ </ul>
+ <ul class="pull-right">
+  <li><a href="http://www.waibo.wang/user/">登录</a></li>
+  <li class="b">|</li>
+  <li><a href="http://www.waibo.wang/user/register.asp" target="_blank">注册</a></li>
+ </div>
+ </div>
+
+<div class="topnav">
+<div class="container">
+  <div class="row-fluid mtz">
+  <div class="span3 topnav-logo">
+    <a href="http://www.waibo.wang/"><p class="logo-cn">歪脖网</p><p class="logo-en hidden-phone">waibo.wang</p></a>
+  </div>
+  <div class="span6 nav">
+   <ul>
+     <li ><a href="http://www.waibo.wang/">首页</a></li>
+     <li class="active"><a href="http://localhost/waibo/">教程</a></li>
+     <li ><a href="http://www.waibo.wang/wiki/">专栏</a></li>
+     <li ><a href="http://www.waibo.wang/demo/">素材</a></li>
+   </ul>
+  </div>
+  <div class="span3 topnav-form">
+  </div>
+ </div>
+ </div>
+ </div>
+ </div>
+
+
+ <div class="container">
+ <div class="row-fluid">
+ <aside class="span3">
+ <map id="oAll" name="oAll">
+ <area title="全部展开" shape="rect" coords="0,0,22,20"  href="javascript:tree.openAll();" onfocus="blur(this);">
+ <area title="全部收起" shape="rect" coords="22,0,44,20" href="javascript:tree.closeAll();" onfocus="blur(this);">
+ </map>
+ <header><span>目录</span><img src="http://localhost/waibo/img/map.png" usemap="#oAll"/></header>
+ <script src="http://localhost/waibo/js/dtree.js"></script>
+ <script src="http://localhost/waibo/bible/json/js/tree.js"></script>
+ <script>
+    createTree("10502");
+ </script>
+ </aside>
+
+ <main class="span9">
+ <header><div class="name"><strong>JSON 教程</strong></div><div class="section">1.5.2 JSON.stringify()</div></header>
+ <div><label id="treeview"><input id="show" type="checkbox" checked /> 文档结构视图</label><span class="hit">阅读（ <span id="hit"></span> ）</div>
+ <article>
+<h1 class="hide-text">JSON 教程</h1>
+<h2 class="hide-text">JSON简介</h2>
+<h2 class="hide-text">JSON语法</h2>
+<h2 class="hide-text">JSON对象</h2>
+<h2 class="hide-text">JSON数组</h2>
+<h2 class="hide-text">JSON和JS对象互转</h2>
+<h3 class="hide-text">JSON.parse()</h3>
+<h3>JSON.stringify()</h3>
+<p>JSON.stringify()方法用于把JavaScript值（对象或者数组）序列化为JSON字符串，并返回序列化后的JSON字符串。调用格式为：</p>
+<p>JSON.stringify(value[, replacer[, space]])</p>
+<p>参数：</p>
+<p>value: 必需。将要序列化为JSON 字符串的值。</p>
+<p>replacer: 可选。用于替换结果的函数、或仅包括指定的属性数组。</p>
+<p>space: 可选。用于文本添加缩进、空格和换行符。</p>
+<h4>序列化规则</h4>
+<p>序列化的本质，就是按照 JSON 的语法规则，把 JavaScript 值（对象或者数组），转换为 JSON 字符串，以方便存储和数据交换。</p>
+<p>1）数值、布尔值、字符串的包装对象，会转换成对应的原始值。如：</p>
+<pre class="prettyprint linenums">
+<code>JSON.stringify(1)       // "1"
+JSON.stringify(false)   // "false"
+JSON.stringify('abc')   // ""abc""
+JSON.stringify([1, "false", false])  // '[1,"false",false]'</code></pre>
+<p>2）键和值都被序列化，如果键名没有引号，会自动为它添加引号。如：</p>
+<pre class="prettyprint linenums">
+<code>JSON.stringify({x: 5, y: 6});     // "{"x":5,"y":6}"
+JSON.stringify({name: "张三"})    // '{"name":"张三"}'</code></pre>
+<p>3）数组，会转换成数组格式。如：</p>
+<pre class="prettyprint linenums">
+<code>JSON.stringify([])   // "[]"
+JSON.stringify([1, "false", false])  // '[1,"false",false]'</code></pre>
+<p>4）对象，会转换成对象格式。如：</p>
+<pre class="prettyprint linenums">
+<code>JSON.stringify({})                // "{}"
+JSON.stringify({x: 5, y: 6});     // "{"x":5,"y":6}"</code></pre>
+<p>5）正则表达式和数学对象，转换成空对象的字符串形式。如：</p>
+<pre class="prettyprint linenums">
+<code>JSON.stringify(/foo/)   // "{}"
+JSON.stringify(Math)    // "{}"</code></pre>
+<p>6）日期对象和包装对象，转换成字符串。如：</p>
+<pre class="prettyprint linenums">
+<code>JSON.stringify(new Boolean(true))   //"true"
+JSON.stringify(new String('123'))   //""123""
+JSON.stringify(new Number(1))       //"1"
+JSON.stringify(new Date())          //""2016-09-20T02:26:38.294Z""</code></pre>
+<p>7） 如果非数组对象的成员是undefined、或任意的函数、或 symbol 值，这个成员会被省略。如果数组对象的成员是undefined、或任意的函数、或 symbol 值，则这些值被转成null。如：</p>
+<pre class="prettyprint linenums">
+<code>JSON.stringify({
+  a: function(){},
+  b: undefined,
+  c: [ function(){}, undefined ]
+});
+// "{"c":[null,null]}"</code></pre>
+<p>8）不可枚举的属性，会被忽略。如：</p>
+<pre class="prettyprint linenums">
+<code>var obj = {};
+Object.defineProperties(obj, {
+  'foo': { value: 1,  enumerable: true },
+  'bar': { alue: 2, enumerable: false }
+});
+JSON.stringify(obj);  // "{"foo":1}"</code></pre>
+<p>9）所有以 symbol 为键的属性都会被完全忽略掉，即便 replacer 参数中强制指定包含了它们。如：</p>
+<pre class="prettyprint linenums">
+<code>JSON.stringify(
+    {[Symbol.for("foo")]: "foo"},
+    function (k, v) {
+        if (typeof k === "symbol"){
+            return "a symbol";
+        }
+    }
+);
+// undefined</code></pre>
+<h4>replacer参数</h4>
+<p>replacer参数可以是一个函数或者一个数组。</p>
+<p>1）函数</p>
+<p>如果replacer参数是一个函数，则对象的每个成员都会调用这个函数。该函数接收两个参数，一个是键（key），一个是值（value），执行序列化时，键和值都会被序列化。如：</p>
+<pre class="prettyprint linenums">
+<code>function dobule(key, value){
+  if (typeof value === "number") {
+    value = 2 * value;
+  }
+  return value;
+}
+console.log(JSON.stringify({a:1,b:2}, dobule()));  // "{"a":2,"b":4}"</code></pre>
+<p>如果replacer函数返回的是一个对象，则该对象被递归地序列化成JSON字符串，并且允许键为空。如：</p>
+<pre class="prettyprint linenums">
+<code>var jsonObj = {a: {b: 1}};
+JSON.stringify(jsonObj, function(key, value) {
+  console.log("["+ key +"]:" + value);
+  return value;
+});</code></pre>
+<p>上述代码中，对象 jsonObj 一共会被 function函数处理三次。第一次键名为空，键值是整个对象 jsonObj；第二次键名为 a，键值是 {b:1}；第三次键名为 b，键值为 1。运行结果为：</p>
+<pre class="prettyprint linenums">
+<code>[]:[object Object]
+[a]:[object Object]
+[b]:1</code></pre>
+<p>如果replacer函数返回了undefined或没有返回值，那么相应的属性会被忽略，这种情况将不会被序列化成JSON字符串。如：</p>
+<pre class="prettyprint linenums">
+<code>JSON.stringify({ a: "abc", b: 123 }, function (key, value) {
+  if (typeof(value) === "string") {
+    return undefined;
+  }
+  return value;
+})</code></pre>
+<p>上述代码得到的结果为：</p>
+<pre class="prettyprint linenums">
+<code>'{"b": 123}'</code></pre>
+<p>2）数组</p>
+<p>如果replacer是一个数组，数组的值代表将被序列化成JSON字符串的属性名。执行序列化时，则只对数组中所列举的键执行序列化操作，就相当于实现一个过滤器的功能。如：</p>
+<pre class="prettyprint linenums">
+<code>var jsonObj = {
+  "title":"javascript",
+  "group":{
+    "a":1,
+    "b":2
+  }
+};
+console.log(JSON.stringify(jsonObj,["group","b"]))</code></pre>
+<p>上述代码的运行结果为：</p>
+<pre class="prettyprint linenums">
+<code>{"group":{"b":2}}</code></pre>
+<p>需要特别说明的是，过滤器功能只适用于对象，对数组无效。如，</p>
+<pre class="prettyprint linenums">
+<code>var jsonObj = [1,2];
+console.log(JSON.stringify(jsonObj,["0"]));   // "[1,2]"</code></pre>
+<h4>space参数</h4>
+<p>默认情况下，JSON.stringify() 输出的JSON字符串不包括任何空格字符或缩进。如：</p>
+<pre class="prettyprint linenums">
+<code>var jsonObj = {
+    "title":"javascript",
+    "group":{
+        "name":"jia",
+        "tel":12345
+    }
+};
+JSON.stringify(jsonObj);
+//{"title":"javascript","group":{"name":"jia","tel":12345}}</code></pre>
+<p>通过指定space参数，可以在JSON字符串中添加空格或字符串，用于增加返回的JSON字符串的可读性。space参数的值可以是数值或字符串。</p>
+<p>1）数值</p>
+<p>如果space参数的值是数值，则序列化的字符串中，每一级别会比上一级别缩进指定数目的空格（不超过10个空格）。如：</p>
+<pre class="prettyprint linenums">
+<code>console.log(JSON.stringify({ p1: 1, p2: 2 }, null, 2));</code></pre>
+<p>上述代码得到的结果为：</p>
+<pre class="prettyprint linenums">
+<code>{
+  "p1": 1,
+  "p2": 2
+}</code></pre>
+<p>2）字符串</p>
+<p>如果space参数的值是字符串（字符串不超过10个字符），则序列化的字符串中，每一级别会比上一级别的缩进，使用该字符串填充。如：</p>
+<pre class="prettyprint linenums">
+<code>console.log(JSON.stringify({ p1:1, p2:2 }, null, '|-'));</code></pre>
+<p>上述代码得到的结果为：</p>
+<pre class="prettyprint linenums">
+<code>{
+|-"p1": 1,
+|-"p2": 2
+}</code></pre>
+<section>
+<p class="warn">注意：</p>
+<p>在序列化一个对象时，如果该对象拥有 toJSON()方法，那么该 toJSON() 方法就会覆盖该对象默认的序列化行为: 被序列化的不是那个原始对象，而是调用 toJSON() 方法后返回的那个对象。如：</p>
+<pre class="prettyprint linenums">
+<code>var obj = {
+  foo: 'foo',
+  toJSON: function () {
+    return 'bar';
+  }
+};
+JSON.stringify(obj);        // '"bar"'
+JSON.stringify({x: obj});   // '{"x":"bar"}'</code></pre>
+<p>如果 toJSON()方法返回 undefined，此时如果包含它的对象嵌入在另一个对象中，会导致该对象的值变成 null。而如果包含它的对象是顶级对象，结果就是 undefined。</p>
+<p>Date 对象部署了一个自己的 toJSON()方法，它会自动将 Date 对象转换成日期字符串。如：</p>
+<pre class="prettyprint linenums">
+<code>JSON.stringify(new Date("2017-12-29"))
+// "2017-12-29T00:00:00.000Z"</code></pre>
+</section>
+<div id="modalReward" class="modal hide fade modal-reward" tabindex="-1">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal">&times;</button>
+<h6>打赏</h6>
+</div>
+<div class="modal-body">
+<div class="tabbable reward-weipay">
+<ul class="nav nav-tabs">
+<li class="active"><a data-toggle="tab" href="#weipay1">￥1</a></li>
+<li><a data-toggle="tab" href="#weipay2">￥2</a></li>
+<li><a data-toggle="tab" href="#weipay5">￥5</a></li>
+<li><a data-toggle="tab" href="#weipay10">￥10</a></li>
+<li><a data-toggle="tab" href="#weipay20">￥20</a></li>
+<li><a data-toggle="tab" href="#weipayrand">其他金额</a></li>
+</ul>
+<div class="tab-content">
+<div class="tab-pane active" id="weipay1">
+<img src="http://localhost/waibo/img/weipay1.png" alt="￥1"><span>￥1</span>
+</div>
+<div class="tab-pane" id="weipay2">
+<img src="http://localhost/waibo/img/weipay2.png" alt="￥2"><span>￥2</span>
+</div>
+<div class="tab-pane" id="weipay5">
+<img src="http://localhost/waibo/img/weipay5.png" alt="￥5"><span>￥5</span>
+</div>
+<div class="tab-pane" id="weipay10">
+<img src="http://localhost/waibo/img/weipay10.png" alt="￥10"><span>￥10</span>
+</div>
+<div class="tab-pane" id="weipay20">
+<img src="http://localhost/waibo/img/weipay20.png" alt="￥20"><span>￥20</span>
+</div>
+<div class="tab-pane" id="weipayrand">
+<img src="http://localhost/waibo/img/weipayrand.png" alt="￥随意"><span>￥随意</span>
+</div>
+</div>
+</div>
+<div class="tabbable reward-alipay hide">
+<ul class="nav nav-tabs">
+<li class="active"><a data-toggle="tab" href="#alipay1">￥1</a></li>
+<li><a data-toggle="tab" href="#alipay2">￥2</a></li>
+<li><a data-toggle="tab" href="#alipay5">￥5</a></li>
+<li><a data-toggle="tab" href="#alipay10">￥10</a></li>
+<li><a data-toggle="tab" href="#alipay20">￥20</a></li>
+<li><a data-toggle="tab" href="#alipayrand">其他金额</a></li>
+</ul>
+<div class="tab-content">
+<div class="tab-pane active" id="alipay1">
+<img src="http://localhost/waibo/img/alipay1.png" alt="￥1"><span>￥1</span>
+</div>
+<div class="tab-pane" id="alipay2">
+<img src="http://localhost/waibo/img/alipay2.png" alt="￥2"><span>￥2</span>
+</div>
+<div class="tab-pane" id="alipay5">
+<img src="http://localhost/waibo/img/alipay5.png" alt="￥5"><span>￥5</span>
+</div>
+<div class="tab-pane" id="alipay10">
+<img src="http://localhost/waibo/img/alipay10.png" alt="￥10"><span>￥10</span>
+</div>
+<div class="tab-pane" id="alipay20">
+<img src="http://localhost/waibo/img/alipay20.png" alt="￥20"><span>￥20</span>
+</div>
+<div class="tab-pane" id="alipayrand">
+<img src="http://localhost/waibo/img/alipayrand.png" alt="￥随意"><span>￥随意</span>
+</div>
+</div>
+</div>
+<div class="reward-method">
+<label><input type="radio" name="method" value="weipay" checked><img src="http://localhost/waibo/img/weipay.png" alt="微信支付"></label>
+<label><input type="radio" name="method" value="alipay"><img src="http://localhost/waibo/img/alipay.png" alt="支付宝"></label>
+</div>
+</div>
+</div>
+<div class="reward">
+<p>如果本教程对您帮助很大，请随意打赏。您的支持，将鼓励我写出更好的教程！</p>
+<a data-toggle="modal" href="#modalReward">赏</a>
+</div>
+ <div class="page">
+   <a id="prev" href="http://localhost/waibo/bible/json/html/1/1.5.1.html" title="&#8592; 键到上一节">« 上一节</a>&#8592; 键盘方向键翻页 &#8594;<a id="next" href="http://localhost/waibo/bible/json/html/0/0.1.html" title="&#8594; 键到下一节">下一节 »</a>
+ </div>
+ </article>
+ </main>
+ </div>
+ </div>
+ <div class="floatPanel">
+	 <div class="ctrolPanel">
+		 <a href="javascript:;" class="arrow top" onClick="goTop()"><span>返回顶部</span></a>
+    <a href="#" class="phone"  data-target="#phone"><span>手机访问</span></a>
+    <a href="#" class="wechat" data-target="#wechat"><span>关注微信</span></a>
+    <a href="javascript:;" class="arrow bottom" onClick="goBottom()"><span>返回底部</span></a>
+  </div>
+	<div id="phone" class="popPanel">
+		<div class="popPanel-inner">
+			<img src="http://localhost/waibo/img/site.png" /><p class="slogan">扫码访问歪脖网</p><p>随时随地，想看就看</p>
+		</div>
+	</div>
+	<div id="wechat" class="popPanel">
+		<div class="popPanel-inner">
+			<img src="http://localhost/waibo/img/weixin.png" /><p class="slogan">关注歪脖网微信</p><p>分享 web 知识、交流 web 经验</p>
+		</div>
+	</div>
+</div>
+ <footer>
+   <p>Copyright&copy;2017&nbsp;&nbsp;www.waibo.wang All Rights Reserved</p>
+   <p>陕ICP备17020676号-1&nbsp;&nbsp;&nbsp;&nbsp;客服QQ：376601179&nbsp;&nbsp;&nbsp;&nbsp;邮箱：376601179#qq.com
+ </footer>
+ <script src="http://localhost/waibo/js/prettify.js"></script>
+ <script src="http://localhost/waibo/js/bootstrap.min.js"></script>
+ <script src="http://localhost/waibo/js/ckeditor_4.7.1/ckeditor.js"></script>
+ <script>
+ $(function() {
+    prettyPrint();
+    bible();
+    load();
+    rewardMethod();
+ });
+ </script>
+</body>
+</html>

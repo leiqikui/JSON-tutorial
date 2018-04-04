@@ -26,7 +26,7 @@ function createTree(id) {
 	tree.add(105, 1, "1.5 JSON 和 JS 对象互转", "http://localhost/waibo/bible/json/html/1/1.5.1.html");
 	tree.add(10501, 105, "1.5.1 JSON.parse()", "http://localhost/waibo/bible/json/html/1/1.5.1.html");
 	tree.add(10502, 105, "1.5.2 JSON.stringify()", "http://localhost/waibo/bible/json/html/1/1.5.2.html");
-	tree.add(2, -1, "参考资料", "http://localhost/waibo/bible/json/html/0/0.1.html");
+	tree.add(2, -1, "参考资料", "http://localhost/waibo/bible/json/html/0/0.html");
 
 	document.write(tree);
 	tree.openTo(id, true);
